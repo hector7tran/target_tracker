@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Tracker - Duke Version</title>
+    <title>Family Tracker - Duke Version 2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -12,6 +12,8 @@
         .blue-gradient { background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%); }
         .tab-active { background-color: white; color: #2563eb; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
         .tab-inactive { color: #64748b; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="pb-24">
@@ -27,37 +29,40 @@
     </header>
 
     <main class="max-w-md mx-auto px-4 -mt-8">
-        <div class="relative mb-6">
+        <div class="relative mb-4">
             <input type="text" id="search-input" oninput="renderDashboard()" placeholder="Tìm User hoặc Mục tiêu..." 
                    class="w-full p-4 pl-12 bg-white rounded-2xl shadow-sm border-none focus:ring-2 focus:ring-blue-400 outline-none transition-all">
-            <span class="absolute left-4 top-4 opacity-30">🔍</span>
+            <span class="absolute left-4 top-4 opacity-30 text-lg">🔍</span>
         </div>
 
-        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl mb-8">
+        <div id="user-quick-stats" class="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+            </div>
+
+        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl mb-6">
             <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-active">Dashboard</button>
-            <button onclick="switchTab('statistic')" id="btn-statistic" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-inactive">Thống kê</button>
+            <button onclick="switchTab('statistic')" id="btn-statistic" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-inactive">Chi tiết</button>
             <button onclick="switchTab('add')" id="btn-add" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-inactive">Thêm</button>
         </div>
 
         <section id="tab-dashboard" class="space-y-4">
-            <div id="goals-list" class="text-center py-10 text-gray-400">Đang tải dữ liệu...</div>
+            <div id="goals-list" class="text-center py-10 text-gray-400 italic">Đang tải dữ liệu gia đình...</div>
         </section>
 
         <section id="tab-statistic" class="hidden space-y-4">
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                <h2 class="text-lg font-bold mb-4">Hiệu suất thành viên</h2>
+                <h2 class="text-lg font-bold mb-4 text-blue-900">Báo cáo hiệu suất</h2>
                 <div id="stats-list" class="space-y-6 text-sm"></div>
             </div>
         </section>
 
         <section id="tab-add" class="hidden">
             <div class="bg-white p-6 rounded-3xl shadow-sm border">
-                <h2 class="text-xl font-bold mb-6">Mục tiêu mới</h2>
+                <h2 class="text-xl font-bold mb-6 text-blue-900">Tạo mục tiêu mới</h2>
                 <div class="space-y-4">
-                    <input type="text" id="form-user" placeholder="Ai thực hiện?" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
-                    <input type="text" id="form-goal" placeholder="Mục tiêu lớn?" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
+                    <input type="text" id="form-user" placeholder="Ai thực hiện? (Tài Đức, Vân...)" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
+                    <input type="text" id="form-goal" placeholder="Mục tiêu lớn (VD: Sức khỏe)" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
                     <textarea id="form-tasks" placeholder="Các nhiệm vụ nhỏ (mỗi dòng 1 việc)..." rows="4" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none"></textarea>
-                    <button onclick="submitGoal()" class="w-full blue-gradient text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition">Tạo nhiệm vụ</button>
+                    <button onclick="submitGoal()" class="w-full blue-gradient text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition">Tạo nhiệm vụ ngay</button>
                 </div>
             </div>
         </section>
@@ -71,7 +76,7 @@
                 <input type="file" id="modal-image" accept="image/*" class="w-full text-xs">
                 <div class="flex gap-3 pt-2">
                     <button onclick="closeModal()" class="w-1/3 bg-gray-100 py-4 rounded-2xl font-bold text-gray-500">Hủy</button>
-                    <button onclick="confirmComplete()" id="btn-confirm-save" class="w-2/3 blue-gradient text-white py-4 rounded-2xl font-bold">Lưu kết quả</button>
+                    <button onclick="confirmComplete()" id="btn-confirm-save" class="w-2/3 blue-gradient text-white py-4 rounded-2xl font-bold">Hoàn thành</button>
                 </div>
             </div>
         </div>
@@ -93,12 +98,64 @@
             } catch (e) { console.error("Fetch error:", e); }
         }
 
+        // Logic tính toán thống kê theo User
+        function calculateUserStats(data) {
+            const users = [...new Set(data.map(i => i.User))];
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // Tính đầu tuần (Thứ 2)
+            const startOfWeek = new Date(now);
+            const day = now.getDay();
+            const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+            startOfWeek.setDate(diff);
+            startOfWeek.setHours(0,0,0,0);
+
+            return users.map(user => {
+                const uTasks = data.filter(i => i.User === user);
+                const doneTasks = uTasks.filter(i => i.Status === 'Completed');
+                
+                const doneThisWeek = doneTasks.filter(i => {
+                    const d = new Date(i.DateDone);
+                    return d >= startOfWeek;
+                }).length;
+
+                const doneThisMonth = doneTasks.filter(i => {
+                    const d = new Date(i.DateDone);
+                    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+                }).length;
+
+                return {
+                    name: user,
+                    total: uTasks.length,
+                    done: doneTasks.length,
+                    week: doneThisWeek,
+                    month: doneThisMonth
+                };
+            });
+        }
+
         function renderDashboard() {
             const list = document.getElementById('goals-list');
+            const statsContainer = document.getElementById('user-quick-stats');
             const search = document.getElementById('search-input').value.toLowerCase();
             
-            let filtered = rawData.filter(i => i.User.toLowerCase().includes(search) || i.Goal.toLowerCase().includes(search));
+            // 1. Render Quick Stats
+            const userStats = calculateUserStats(rawData);
+            statsContainer.innerHTML = userStats.map(stat => `
+                <div class="min-w-[160px] bg-white p-4 rounded-3xl shadow-sm border border-blue-50 flex-shrink-0">
+                    <p class="text-blue-600 font-extrabold text-sm mb-2 truncate">${stat.name}</p>
+                    <div class="space-y-1 text-[11px] font-bold text-gray-500">
+                        <div class="flex justify-between"><span>Tổng:</span> <span class="text-gray-800">${stat.done}/${stat.total}</span></div>
+                        <div class="flex justify-between"><span>Tuần:</span> <span class="text-green-600">+${stat.week}</span></div>
+                        <div class="flex justify-between"><span>Tháng:</span> <span class="text-blue-500">+${stat.month}</span></div>
+                    </div>
+                </div>
+            `).join('');
 
+            // 2. Render List Goals
+            let filtered = rawData.filter(i => i.User.toLowerCase().includes(search) || i.Goal.toLowerCase().includes(search));
             const grouped = filtered.reduce((acc, item) => {
                 const key = `${item.User} - ${item.Goal}`;
                 if (!acc[key]) acc[key] = [];
@@ -107,7 +164,7 @@
             }, {});
 
             if (Object.keys(grouped).length === 0) {
-                list.innerHTML = `<div class="py-10 text-gray-400">Không tìm thấy dữ liệu</div>`;
+                list.innerHTML = `<div class="py-10 text-gray-400">Không tìm thấy nhiệm vụ nào</div>`;
                 return;
             }
 
@@ -129,16 +186,16 @@
                                     ${i.Result ? `<span class="text-[10px] text-gray-400 font-medium">${i.Result}</span>` : ''}
                                 </div>
                             </div>
-                            ${!isDone ? `<button onclick="openCompleteModal('${i.User}','${i.Goal}','${i.Task.replace(/'/g, "\\'")}')" class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg font-bold text-xs">DONE</button>` : ''}
+                            ${!isDone ? `<button onclick="openCompleteModal('${i.User}','${i.Goal}','${i.Task.replace(/'/g, "\\'")}')" class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg font-bold text-xs">XONG</button>` : ''}
                         </div>
                     `;
                 }).join('');
 
                 list.innerHTML += `
-                    <div class="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden mb-4">
-                        <div class="p-5 bg-gray-50/50 flex justify-between items-center">
-                            <h3 class="font-bold text-gray-800 text-left">${key}</h3>
-                            ${allDone ? '<span class="bg-green-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black">ALL DONE</span>' : ''}
+                    <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden mb-4">
+                        <div class="p-4 bg-gray-50/50 flex justify-between items-center border-b border-gray-100">
+                            <h3 class="font-bold text-gray-800 text-sm">${key}</h3>
+                            ${allDone ? '<span class="bg-green-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black uppercase">Hoàn thành</span>' : ''}
                         </div>
                         <div>${tasksHtml}</div>
                     </div>
@@ -148,17 +205,29 @@
 
         function renderStatistic() {
             const statsList = document.getElementById('stats-list');
-            const users = [...new Set(rawData.map(i => i.User))];
+            const stats = calculateUserStats(rawData);
+            
             let html = '';
-            users.forEach(user => {
-                const uTasks = rawData.filter(i => i.User === user);
-                const doneTasks = uTasks.filter(i => i.Status === 'Completed').length;
+            stats.forEach(s => {
+                const percent = Math.round((s.done / s.total) * 100) || 0;
                 html += `
-                    <div class="border-b border-gray-50 pb-4 last:border-0">
-                        <div class="flex justify-between mb-2"><span class="font-bold text-blue-600">${user}</span><span class="text-xs text-gray-400">Hiệu suất</span></div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <div class="bg-blue-50 p-3 rounded-2xl text-center"><p class="text-lg font-bold text-blue-700">${doneTasks}</p><p class="text-[9px] text-blue-300 font-bold uppercase">Nhiệm vụ xong</p></div>
-                            <div class="bg-green-50 p-3 rounded-2xl text-center"><p class="text-lg font-bold text-green-700">${uTasks.length}</p><p class="text-[9px] text-green-300 font-bold uppercase">Tổng nhiệm vụ</p></div>
+                    <div class="border-b border-gray-50 pb-6 last:border-0">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="font-bold text-blue-700 text-lg">${s.name}</span>
+                            <span class="text-xs font-black text-gray-400 bg-gray-100 px-2 py-1 rounded-lg">${percent}%</span>
+                        </div>
+                        <div class="w-full h-2 bg-gray-100 rounded-full mb-4 overflow-hidden">
+                            <div class="h-full bg-blue-500 transition-all duration-1000" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-blue-50 p-4 rounded-2xl">
+                                <p class="text-xl font-black text-blue-700">${s.done}/${s.total}</p>
+                                <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">Nhiệm vụ xong</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-2xl">
+                                <p class="text-xl font-black text-green-700">+${s.week}</p>
+                                <p class="text-[10px] text-green-400 font-bold uppercase tracking-wider">Tuần này</p>
+                            </div>
                         </div>
                     </div>`;
             });
@@ -180,9 +249,8 @@
         async function confirmComplete() {
             const result = document.getElementById('modal-result').value;
             const fileInput = document.getElementById('modal-image');
-            if (!result) return alert('Nhập kết quả!');
+            if (!result) return alert('Anh hãy nhập kết quả nhé!');
 
-            // Khóa nút để tránh bấm nhiều lần
             const btn = document.getElementById('btn-confirm-save');
             btn.disabled = true; btn.innerText = 'Đang lưu...';
 
@@ -202,16 +270,16 @@
                 const resJson = await response.json();
                 
                 if (resJson.status === 'success') {
-                    Toast.fire({ icon: 'success', title: 'Đã cập nhật Spreadsheet!' });
+                    Toast.fire({ icon: 'success', title: 'Tuyệt vời!' });
                     closeModal();
-                    await fetchData(); // Tải lại dữ liệu thật
+                    await fetchData();
                 } else {
                     alert('Lỗi: ' + resJson.message);
                 }
             } catch (err) {
                 alert('Lỗi kết nối!');
             } finally {
-                btn.disabled = false; btn.innerText = 'Lưu kết quả';
+                btn.disabled = false; btn.innerText = 'Hoàn thành';
             }
         }
 
@@ -219,9 +287,9 @@
             const user = document.getElementById('form-user').value.trim();
             const goal = document.getElementById('form-goal').value.trim();
             const tasks = document.getElementById('form-tasks').value.split('\n').filter(t => t.trim());
-            if (!user || !goal || tasks.length === 0) return alert('Điền đủ thông tin!');
+            if (!user || !goal || tasks.length === 0) return alert('Vui lòng điền đủ thông tin!');
 
-            Swal.fire({ title: 'Đang tạo...', didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'Đang tạo...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
             await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addGoal', data: { user, goal, tasks } }) });
             
             document.getElementById('form-user').value = '';
@@ -244,7 +312,7 @@
             r.onload = () => res(r.result); r.onerror = e => rej(e);
         });
 
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         fetchData();
     </script>
 </body>
