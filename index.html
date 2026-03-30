@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Goal Tracker Pro</title>
+    <title>Family Tracker - Duke Version</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -16,72 +16,62 @@
 </head>
 <body class="pb-24">
 
-    <!-- Header -->
     <header class="blue-gradient text-white pt-8 pb-12 px-6 rounded-b-[2.5rem] shadow-lg">
         <div class="max-w-md mx-auto flex justify-between items-center">
             <div>
                 <h1 class="text-2xl font-extrabold tracking-tight">Family Goals</h1>
                 <p id="current-date" class="text-blue-100 text-xs mt-1 font-medium opacity-80"></p>
             </div>
-            <div class="h-12 w-12 bg-white/20 rounded-2xl backdrop-blur-md flex items-center justify-center">
-                <span class="text-xl">🏠</span>
-            </div>
+            <div class="h-12 w-12 bg-white/20 rounded-2xl backdrop-blur-md flex items-center justify-center text-xl">🏠</div>
         </div>
     </header>
 
     <main class="max-w-md mx-auto px-4 -mt-8">
-        <!-- Search Bar -->
         <div class="relative mb-6">
-            <input type="text" id="search-input" oninput="renderDashboard()" placeholder="Tìm theo tên hoặc mục tiêu..." 
+            <input type="text" id="search-input" oninput="renderDashboard()" placeholder="Tìm User hoặc Mục tiêu..." 
                    class="w-full p-4 pl-12 bg-white rounded-2xl shadow-sm border-none focus:ring-2 focus:ring-blue-400 outline-none transition-all">
             <span class="absolute left-4 top-4 opacity-30">🔍</span>
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl mb-8 backdrop-blur-sm">
-            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold transition-all tab-active">D.Board</button>
-            <button onclick="switchTab('statistic')" id="btn-statistic" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold transition-all tab-inactive">Thống kê</button>
-            <button onclick="switchTab('add')" id="btn-add" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold transition-all tab-inactive">Thêm mới</button>
+        <div class="flex bg-gray-200/50 p-1.5 rounded-2xl mb-8">
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-active">Dashboard</button>
+            <button onclick="switchTab('statistic')" id="btn-statistic" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-inactive">Thống kê</button>
+            <button onclick="switchTab('add')" id="btn-add" class="tab-btn w-1/3 py-2.5 rounded-xl font-bold tab-inactive">Thêm</button>
         </div>
 
-        <!-- DASHBOARD TAB -->
         <section id="tab-dashboard" class="space-y-4">
-            <div id="goals-list" class="space-y-5 text-center py-10 text-gray-400">Đang tải dữ liệu...</div>
+            <div id="goals-list" class="text-center py-10 text-gray-400">Đang tải dữ liệu...</div>
         </section>
 
-        <!-- STATISTIC TAB -->
         <section id="tab-statistic" class="hidden space-y-4">
-            <div id="stats-content" class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
                 <h2 class="text-lg font-bold mb-4">Hiệu suất thành viên</h2>
                 <div id="stats-list" class="space-y-6 text-sm"></div>
             </div>
         </section>
 
-        <!-- ADD TAB -->
         <section id="tab-add" class="hidden">
             <div class="bg-white p-6 rounded-3xl shadow-sm border">
-                <h2 class="text-xl font-bold mb-6 text-gray-800">Mục tiêu mới</h2>
-                <div class="space-y-5">
-                    <input type="text" id="form-user" placeholder="Ai thực hiện?" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
-                    <input type="text" id="form-goal" placeholder="Mục tiêu lớn là gì?" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
-                    <textarea id="form-tasks" placeholder="Các việc cần làm (mỗi dòng 1 việc)..." rows="4" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none"></textarea>
-                    <button onclick="submitGoal()" class="w-full blue-gradient text-white font-bold py-4 rounded-2xl shadow-blue-200 shadow-xl active:scale-95 transition">Tạo nhiệm vụ</button>
+                <h2 class="text-xl font-bold mb-6">Mục tiêu mới</h2>
+                <div class="space-y-4">
+                    <input type="text" id="form-user" placeholder="Ai thực hiện?" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
+                    <input type="text" id="form-goal" placeholder="Mục tiêu lớn?" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none">
+                    <textarea id="form-tasks" placeholder="Các nhiệm vụ nhỏ (mỗi dòng 1 việc)..." rows="4" class="w-full p-4 bg-gray-50 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none"></textarea>
+                    <button onclick="submitGoal()" class="w-full blue-gradient text-white font-bold py-4 rounded-2xl shadow-xl active:scale-95 transition">Tạo nhiệm vụ</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Modal hoàn thành -->
-    <div id="modal-complete" class="fixed inset-0 bg-black/60 hidden z-50 flex items-end sm:items-center justify-center p-4">
-        <div class="bg-white rounded-t-[2.5rem] sm:rounded-[2.5rem] p-8 w-full max-w-sm transition-transform duration-300">
-            <h3 class="text-xl font-extrabold mb-2" id="modal-task-title">Xác nhận</h3>
-            <p class="text-gray-400 text-sm mb-6">Nhập kết quả và ảnh bằng chứng để hoàn tất.</p>
+    <div id="modal-complete" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-sm">
+            <h3 class="text-xl font-extrabold mb-4" id="modal-task-title">Xác nhận</h3>
             <div class="space-y-4">
-                <input type="text" id="modal-result" placeholder="Kết quả (VD: Đã hoàn thành 5km)" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none">
-                <input type="file" id="modal-image" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-blue-50 file:text-blue-700">
-                <div class="flex gap-3 pt-4">
+                <input type="text" id="modal-result" placeholder="Kết quả thực hiện..." class="w-full p-4 bg-gray-50 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="file" id="modal-image" accept="image/*" class="w-full text-xs">
+                <div class="flex gap-3 pt-2">
                     <button onclick="closeModal()" class="w-1/3 bg-gray-100 py-4 rounded-2xl font-bold text-gray-500">Hủy</button>
-                    <button onclick="confirmComplete()" class="w-2/3 blue-gradient text-white py-4 rounded-2xl font-bold">Xong!</button>
+                    <button onclick="confirmComplete()" id="btn-confirm-save" class="w-2/3 blue-gradient text-white py-4 rounded-2xl font-bold">Lưu kết quả</button>
                 </div>
             </div>
         </div>
@@ -100,18 +90,14 @@
                 rawData = await response.json();
                 renderDashboard();
                 renderStatistic();
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Fetch error:", e); }
         }
 
         function renderDashboard() {
             const list = document.getElementById('goals-list');
             const search = document.getElementById('search-input').value.toLowerCase();
             
-            // Lọc dữ liệu theo search
-            let filtered = rawData;
-            if (search) {
-                filtered = rawData.filter(i => i.User.toLowerCase().includes(search) || i.Goal.toLowerCase().includes(search));
-            }
+            let filtered = rawData.filter(i => i.User.toLowerCase().includes(search) || i.Goal.toLowerCase().includes(search));
 
             const grouped = filtered.reduce((acc, item) => {
                 const key = `${item.User} - ${item.Goal}`;
@@ -119,6 +105,11 @@
                 acc[key].push(item);
                 return acc;
             }, {});
+
+            if (Object.keys(grouped).length === 0) {
+                list.innerHTML = `<div class="py-10 text-gray-400">Không tìm thấy dữ liệu</div>`;
+                return;
+            }
 
             list.innerHTML = '';
             for (let key in grouped) {
@@ -128,28 +119,26 @@
                 let tasksHtml = items.map(i => {
                     const isDone = i.Status === 'Completed';
                     return `
-                        <div class="flex items-center justify-between p-4 ${isDone ? 'bg-green-50/50' : 'bg-white'} border-b border-gray-50 last:border-0">
+                        <div class="flex items-center justify-between p-4 ${isDone ? 'bg-green-50' : 'bg-white'} border-b border-gray-50 last:border-0 transition-colors">
                             <div class="flex items-center gap-3">
                                 <div class="w-6 h-6 rounded-full flex items-center justify-center border ${isDone ? 'bg-green-500 border-green-500 text-white' : 'border-gray-200'}">
                                     ${isDone ? '✓' : ''}
                                 </div>
-                                <div class="flex flex-col">
-                                    <span class="${isDone ? 'text-green-700 font-semibold' : 'text-gray-700'}">${i.Task}</span>
+                                <div class="flex flex-col text-left">
+                                    <span class="${isDone ? 'text-green-700 font-bold' : 'text-gray-700'}">${i.Task}</span>
                                     ${i.Result ? `<span class="text-[10px] text-gray-400 font-medium">${i.Result}</span>` : ''}
                                 </div>
                             </div>
-                            ${!isDone ? `<button onclick="openCompleteModal('${i.User}','${i.Goal}','${i.Task.replace(/'/g, "\\'")}')" class="text-blue-600 font-bold text-xs">DONE</button>` : ''}
+                            ${!isDone ? `<button onclick="openCompleteModal('${i.User}','${i.Goal}','${i.Task.replace(/'/g, "\\'")}')" class="bg-blue-50 text-blue-600 px-3 py-1 rounded-lg font-bold text-xs">DONE</button>` : ''}
                         </div>
                     `;
                 }).join('');
 
                 list.innerHTML += `
-                    <div class="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden">
+                    <div class="bg-white rounded-[2rem] shadow-sm border border-gray-50 overflow-hidden mb-4">
                         <div class="p-5 bg-gray-50/50 flex justify-between items-center">
-                            <div>
-                                <h3 class="font-bold text-gray-800">${key}</h3>
-                                ${allDone ? '<span class="text-[10px] bg-green-500 text-white px-2 py-0.5 rounded-full font-bold">ALL DONE ✓</span>' : ''}
-                            </div>
+                            <h3 class="font-bold text-gray-800 text-left">${key}</h3>
+                            ${allDone ? '<span class="bg-green-500 text-white text-[9px] px-2 py-0.5 rounded-full font-black">ALL DONE</span>' : ''}
                         </div>
                         <div>${tasksHtml}</div>
                     </div>
@@ -160,41 +149,18 @@
         function renderStatistic() {
             const statsList = document.getElementById('stats-list');
             const users = [...new Set(rawData.map(i => i.User))];
-            
             let html = '';
             users.forEach(user => {
-                const userTasks = rawData.filter(i => i.User === user);
-                const completedTasks = userTasks.filter(i => i.Status === 'Completed');
-                const completedGoalsCount = [...new Set(userTasks.map(i => i.Goal))].filter(g => 
-                    userTasks.filter(i => i.Goal === g).every(i => i.Status === 'Completed')
-                ).length;
-
-                // Thống kê theo tuần (7 ngày qua)
-                const sevenDaysAgo = new Date(); sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-                const weekTasks = completedTasks.filter(i => new Date(i.DateDone) >= sevenDaysAgo).length;
-
+                const uTasks = rawData.filter(i => i.User === user);
+                const doneTasks = uTasks.filter(i => i.Status === 'Completed').length;
                 html += `
-                    <div class="space-y-2 border-b border-gray-50 pb-4 last:border-0">
-                        <div class="flex justify-between items-end">
-                            <h4 class="font-bold text-blue-600 text-base">${user}</h4>
-                            <span class="text-[10px] font-bold text-gray-400 uppercase">Tiến độ tổng</span>
+                    <div class="border-b border-gray-50 pb-4 last:border-0">
+                        <div class="flex justify-between mb-2"><span class="font-bold text-blue-600">${user}</span><span class="text-xs text-gray-400">Hiệu suất</span></div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-blue-50 p-3 rounded-2xl text-center"><p class="text-lg font-bold text-blue-700">${doneTasks}</p><p class="text-[9px] text-blue-300 font-bold uppercase">Nhiệm vụ xong</p></div>
+                            <div class="bg-green-50 p-3 rounded-2xl text-center"><p class="text-lg font-bold text-green-700">${uTasks.length}</p><p class="text-[9px] text-green-300 font-bold uppercase">Tổng nhiệm vụ</p></div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2">
-                            <div class="bg-blue-50 p-3 rounded-2xl text-center">
-                                <p class="text-xl font-bold text-blue-700">${completedTasks.length}</p>
-                                <p class="text-[9px] text-blue-400 font-bold uppercase">N.Vụ Xong</p>
-                            </div>
-                            <div class="bg-green-50 p-3 rounded-2xl text-center">
-                                <p class="text-xl font-bold text-green-700">${completedGoalsCount}</p>
-                                <p class="text-[9px] text-green-400 font-bold uppercase">M.Tiêu Xong</p>
-                            </div>
-                            <div class="bg-orange-50 p-3 rounded-2xl text-center">
-                                <p class="text-xl font-bold text-orange-700">${weekTasks}</p>
-                                <p class="text-[9px] text-orange-400 font-bold uppercase">Tuần này</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                    </div>`;
             });
             statsList.innerHTML = html || 'Chưa có dữ liệu';
         }
@@ -207,50 +173,60 @@
 
         function closeModal() {
             document.getElementById('modal-complete').classList.add('hidden');
-            currentTask = null;
+            document.getElementById('modal-result').value = '';
+            document.getElementById('modal-image').value = '';
         }
 
         async function confirmComplete() {
             const result = document.getElementById('modal-result').value;
             const fileInput = document.getElementById('modal-image');
-            if (!result) return alert('Vui lòng nhập kết quả');
+            if (!result) return alert('Nhập kết quả!');
 
-            // Optimistic UI update
-            const taskIdx = rawData.findIndex(i => i.User === currentTask.user && i.Goal === currentTask.goal && i.Task === currentTask.taskName);
-            if (taskIdx > -1) {
-                rawData[taskIdx].Status = 'Completed';
-                rawData[taskIdx].Result = result;
-                rawData[taskIdx].DateDone = new Date().toISOString();
-                renderDashboard();
-                renderStatistic();
-            }
-
-            Toast.fire({ icon: 'success', title: 'Đang gửi dữ liệu...' });
-            closeModal();
+            // Khóa nút để tránh bấm nhiều lần
+            const btn = document.getElementById('btn-confirm-save');
+            btn.disabled = true; btn.innerText = 'Đang lưu...';
 
             let base64 = null;
-            if (fileInput.files.length > 0) base64 = await toBase64(fileInput.files[0]);
+            let contentType = '';
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                contentType = file.type;
+                base64 = await toBase64(file);
+            }
 
-            const payload = { ...currentTask, result, image: base64, contentType: fileInput.files[0]?.type };
-            
-            await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'completeTask', data: payload }) });
-            fetchData(); // Cập nhật lại chuẩn xác từ server
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'completeTask', data: { ...currentTask, result, image: base64, contentType } })
+                });
+                const resJson = await response.json();
+                
+                if (resJson.status === 'success') {
+                    Toast.fire({ icon: 'success', title: 'Đã cập nhật Spreadsheet!' });
+                    closeModal();
+                    await fetchData(); // Tải lại dữ liệu thật
+                } else {
+                    alert('Lỗi: ' + resJson.message);
+                }
+            } catch (err) {
+                alert('Lỗi kết nối!');
+            } finally {
+                btn.disabled = false; btn.innerText = 'Lưu kết quả';
+            }
         }
 
         async function submitGoal() {
-            const user = document.getElementById('form-user').value;
-            const goal = document.getElementById('form-goal').value;
+            const user = document.getElementById('form-user').value.trim();
+            const goal = document.getElementById('form-goal').value.trim();
             const tasks = document.getElementById('form-tasks').value.split('\n').filter(t => t.trim());
-
-            if (!user || !goal || tasks.length === 0) return alert('Nhập đủ thông tin');
+            if (!user || !goal || tasks.length === 0) return alert('Điền đủ thông tin!');
 
             Swal.fire({ title: 'Đang tạo...', didOpen: () => Swal.showLoading() });
+            await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'addGoal', data: { user, goal, tasks } }) });
             
-            await fetch(API_URL, { 
-                method: 'POST', 
-                body: JSON.stringify({ action: 'addGoal', data: { user, goal, tasks } }) 
-            });
-            
+            document.getElementById('form-user').value = '';
+            document.getElementById('form-goal').value = '';
+            document.getElementById('form-tasks').value = '';
             Swal.close();
             switchTab('dashboard');
             fetchData();
@@ -259,10 +235,7 @@
         function switchTab(tab) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('tab-active');
-                b.classList.add('tab-inactive');
-            });
+            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active'); b.classList.add('tab-inactive'); });
             document.getElementById(`btn-${tab}`).classList.add('tab-active');
         }
 
@@ -271,7 +244,7 @@
             r.onload = () => res(r.result); r.onerror = e => rej(e);
         });
 
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'long' });
         fetchData();
     </script>
 </body>
