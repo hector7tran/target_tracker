@@ -3,68 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Family Goals Tracker</title>
+    <title>Family Goals Tracker - SEHC Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
         .blue-gradient { background: linear-gradient(135deg, #0052cc 0%, #007bff 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); }
+        .tab-active { background-color: #2563eb !important; color: white !important; }
+        .loader { border-top-color: #3498db; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="pb-20">
 
-    <header class="blue-gradient text-white p-6 rounded-b-3xl shadow-lg mb-6">
-        <h1 class="text-2xl font-bold">Family Tracking</h1>
-        <p class="text-blue-100 text-sm">Chào Tài Đức, chúc gia đình ngày mới tốt lành!</p>
+    <header class="blue-gradient text-white p-6 rounded-b-[2rem] shadow-xl mb-6">
+        <div class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold">Family Tracking</h1>
+                <p class="text-blue-100 text-xs opacity-80">Hệ thống quản lý mục tiêu gia đình</p>
+            </div>
+            <div class="bg-white/20 p-2 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </div>
+        </div>
     </header>
 
     <div id="app" class="container mx-auto px-4 max-w-md">
-        <div class="flex bg-white rounded-xl p-1 mb-6 shadow-sm border">
-            <button onclick="switchTab('dashboard')" class="tab-btn w-1/2 py-2 rounded-lg font-semibold bg-blue-600 text-white">Dashboard</button>
-            <button onclick="switchTab('add')" class="tab-btn w-1/2 py-2 rounded-lg font-semibold text-gray-500">Thêm Mục Tiêu</button>
+        <div class="flex bg-white rounded-2xl p-1.5 mb-6 shadow-md border border-gray-100">
+            <button id="btn-dashboard" onclick="switchTab('dashboard')" class="tab-btn w-1/2 py-2.5 rounded-xl font-bold transition-all duration-200 tab-active">Dashboard</button>
+            <button id="btn-add" onclick="switchTab('add')" class="tab-btn w-1/2 py-2.5 rounded-xl font-bold text-gray-400 transition-all duration-200">Thêm Mục Tiêu</button>
         </div>
 
         <section id="tab-dashboard">
             <div id="goals-list" class="space-y-4">
-                <div class="text-center py-10 text-gray-400">Đang tải dữ liệu...</div>
+                <div class="flex flex-col items-center justify-center py-20 text-gray-400">
+                    <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+                    <p>Đang tải dữ liệu từ Google Sheets...</p>
+                </div>
             </div>
         </section>
 
         <section id="tab-add" class="hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border">
-                <h2 class="text-lg font-bold mb-4 text-blue-800">Tạo mục tiêu mới</h2>
+            <div class="bg-white p-6 rounded-3xl shadow-lg border border-gray-50">
+                <h2 class="text-xl font-bold mb-5 text-gray-800">Tạo mục tiêu mới</h2>
                 <div class="space-y-4">
-                    <input type="text" id="form-user" placeholder="Tên người thực hiện" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
-                    <input type="text" id="form-goal" placeholder="Mục tiêu lớn (VD: Giảm cân)" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none">
-                    <textarea id="form-tasks" placeholder="Nhiệm vụ nhỏ (mỗi dòng 1 việc)" rows="4" class="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-400 outline-none"></textarea>
-                    <button onclick="submitGoal()" class="w-full blue-gradient text-white font-bold py-3 rounded-xl shadow-blue-200 shadow-lg active:scale-95 transition">Lưu Mục Tiêu</button>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase ml-1">Thành viên</label>
+                        <input type="text" id="form-user" placeholder="VD: Tài Đức hoặc Gia/Đình" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase ml-1">Mục tiêu tổng quát</label>
+                        <input type="text" id="form-goal" placeholder="VD: Rèn luyện sức khỏe" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase ml-1">Danh sách nhiệm vụ con</label>
+                        <textarea id="form-tasks" placeholder="Mỗi dòng là một nhiệm vụ..." rows="4" class="w-full mt-1 p-3.5 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-400 outline-none transition-all"></textarea>
+                        <p class="text-[10px] text-gray-400 mt-1 ml-1">* Nhấn xuống dòng (Enter) cho mỗi nhiệm vụ</p>
+                    </div>
+                    <button onclick="submitGoal()" class="w-full blue-gradient text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-200 active:scale-[0.98] transition-all mt-2">
+                        Lưu Mục Tiêu Ngay
+                    </button>
                 </div>
             </div>
         </section>
     </div>
 
-    <div id="modal-complete" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm">
-            <h3 class="text-xl font-bold mb-4" id="modal-task-title">Xác nhận hoàn thành</h3>
+    <div id="modal-complete" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl scale-in-center">
+            <div class="text-center mb-6">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800" id="modal-task-title">Hoàn thành nhiệm vụ</h3>
+            </div>
             <div class="space-y-4">
-                <input type="text" id="modal-result" placeholder="Kết quả (VD: Đã chạy 5km)" class="w-full p-3 border rounded-xl">
-                <input type="file" id="modal-image" accept="image/*" class="w-full text-sm">
-                <div class="flex gap-2">
-                    <button onclick="closeModal()" class="w-1/2 bg-gray-100 py-3 rounded-xl font-bold">Hủy</button>
-                    <button onclick="confirmComplete()" class="w-1/2 blue-gradient text-white py-3 rounded-xl font-bold">Xong!</button>
+                <input type="text" id="modal-result" placeholder="Kết quả thực hiện..." class="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500">
+                
+                <div class="relative">
+                    <label class="block text-sm font-semibold text-gray-600 mb-2">Đính kèm ảnh bằng chứng:</label>
+                    <input type="file" id="modal-image" accept="image/*" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button onclick="closeModal()" class="w-1/3 bg-gray-100 text-gray-600 py-4 rounded-2xl font-bold hover:bg-gray-200 transition-all">Hủy</button>
+                    <button onclick="confirmComplete()" class="w-2/3 blue-gradient text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-100 active:scale-95 transition-all">Xác nhận xong</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxK66Jjtd_IvOkMBAEVglKCM9huiI0mDaWcC5cDqaVAze6_WyJlSGxsoergXDUBxwRz/exec'; // Thay URL sau khi Deploy GAS
+        /**
+         * CẤU HÌNH QUAN TRỌNG: Dán URL Web App (đuôi /exec) của anh vào đây
+         */
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxK66Jjtd_IvOkMBAEVglKCM9huiI0mDaWcC5cDqaVAze6_WyJlSGxsoergXDUBxwRz/exec'; 
+
         let rawData = [];
         let currentTask = null;
 
-        // Optimistic UI Toast
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -73,24 +114,47 @@
             timerProgressBar: true
         });
 
-        async function fetchData() {
+        // Hàm gọi API dùng chung (Sửa lỗi CORS/Fetch)
+        async function callGAS(action, data) {
             try {
-                const res = await fetch(`${API_URL}?action=getData`, { method: 'POST', body: JSON.stringify({}) });
-                rawData = await res.json();
-                renderDashboard();
-            } catch (e) { console.error("Lỗi fetch:", e); }
+                // Chúng ta dùng text/plain để tránh kích hoạt CORS preflight OPTIONS
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: action, data: data }),
+                });
+                return await response.json();
+            } catch (error) {
+                console.error("API Error:", error);
+                return { status: 'error', message: error.message };
+            }
+        }
+
+        // Tải dữ liệu từ Server
+        async function fetchData() {
+            const listContainer = document.getElementById('goals-list');
+            try {
+                const result = await callGAS('getData', {});
+                if (result && Array.isArray(result)) {
+                    rawData = result;
+                    renderDashboard();
+                } else {
+                    listContainer.innerHTML = `<div class="text-center py-10 text-red-400 uppercase text-xs font-bold">Lỗi: Script chưa trả về mảng dữ liệu</div>`;
+                }
+            } catch (e) {
+                listContainer.innerHTML = `<div class="text-center py-10 text-red-400 uppercase text-xs font-bold">Không thể kết nối Backend</div>`;
+            }
         }
 
         function renderDashboard() {
             const list = document.getElementById('goals-list');
             if (rawData.length === 0) {
-                list.innerHTML = `<div class="text-center py-10 text-gray-400">Chưa có nhiệm vụ nào.</div>`;
+                list.innerHTML = `<div class="bg-white p-10 rounded-3xl text-center shadow-sm border border-dashed border-gray-300 text-gray-400">Chưa có nhiệm vụ nào được tạo.</div>`;
                 return;
             }
 
-            // Group data by User & Goal
+            // Nhóm dữ liệu theo User và Goal
             const grouped = rawData.reduce((acc, item) => {
-                const key = `${item.User} - ${item.Goal}`;
+                const key = `${item.User} • ${item.Goal}`;
                 if (!acc[key]) acc[key] = [];
                 acc[key].push(item);
                 return acc;
@@ -103,38 +167,42 @@
                 const progress = Math.round((completedCount / items.length) * 100);
 
                 let tasksHtml = items.map(i => `
-                    <div class="flex items-center justify-between p-3 border-b last:border-0">
-                        <div class="flex flex-col">
-                            <span class="${i.Status === 'Completed' ? 'line-through text-gray-400' : 'font-medium'}">${i.Task}</span>
-                            ${i.Result ? `<span class="text-xs text-blue-500 italic">${i.Result}</span>` : ''}
+                    <div class="flex items-center justify-between p-4 ${i.Status === 'Completed' ? 'bg-gray-50/50' : 'bg-white'} border-b border-gray-50 last:border-0 transition-all">
+                        <div class="flex flex-col pr-4">
+                            <span class="${i.Status === 'Completed' ? 'line-through text-gray-300' : 'text-gray-700 font-medium'}">${i.Task}</span>
+                            ${i.Result ? `<span class="text-[11px] text-blue-500 font-semibold mt-0.5">● ${i.Result}</span>` : ''}
                         </div>
                         ${i.Status === 'Pending' 
-                            ? `<button onclick="openCompleteModal('${i.User}','${i.Goal}','${i.Task}')" class="bg-blue-50 text-blue-600 p-2 rounded-lg text-sm font-bold border border-blue-200">Hoàn thành</button>`
-                            : `<span class="text-green-500 font-bold text-sm">✓ Done</span>`
+                            ? `<button onclick="openCompleteModal('${i.User}','${i.Goal}','${i.Task.replace(/'/g, "\\'")}')" class="shrink-0 bg-blue-50 text-blue-600 px-4 py-2 rounded-xl text-xs font-bold border border-blue-100 active:bg-blue-600 active:text-white transition-all">Làm xong</button>`
+                            : `<div class="flex flex-col items-end shrink-0">
+                                <span class="text-green-500 font-bold text-xs">Hoàn thành</span>
+                                ${i['Image Link'] ? `<a href="${i['Image Link']}" target="_blank" class="text-[10px] text-blue-400 underline mt-1">Xem ảnh</a>` : ''}
+                               </div>`
                         }
                     </div>
                 `).join('');
 
                 list.innerHTML += `
-                    <div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
-                        <div class="p-4 border-b bg-gray-50 flex justify-between items-center">
+                    <div class="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden mb-5">
+                        <div class="p-5 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center border-b border-gray-100">
                             <div>
-                                <h3 class="font-bold text-blue-900">${key}</h3>
-                                <p class="text-xs text-gray-500">${items.length} nhiệm vụ con</p>
+                                <h3 class="font-bold text-gray-800">${key}</h3>
+                                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">${items.length} NHIỆM VỤ</p>
                             </div>
                             <div class="text-right">
-                                <span class="text-xs font-bold text-blue-600">${progress}%</span>
-                                <div class="w-16 h-1.5 bg-gray-200 rounded-full mt-1">
-                                    <div class="h-full bg-blue-600 rounded-full" style="width: ${progress}%"></div>
+                                <span class="text-sm font-black text-blue-600">${progress}%</span>
+                                <div class="w-16 h-2 bg-gray-100 rounded-full mt-1.5 overflow-hidden">
+                                    <div class="h-full bg-blue-500 rounded-full transition-all duration-1000" style="width: ${progress}%"></div>
                                 </div>
                             </div>
                         </div>
-                        <div>${tasksHtml}</div>
+                        <div class="divide-y divide-gray-50">${tasksHtml}</div>
                     </div>
                 `;
             }
         }
 
+        // Mở Modal xác nhận hoàn thành
         function openCompleteModal(user, goal, task) {
             currentTask = { user, goal, taskName: task };
             document.getElementById('modal-task-title').innerText = task;
@@ -143,15 +211,20 @@
 
         function closeModal() {
             document.getElementById('modal-complete').classList.add('hidden');
+            document.getElementById('modal-result').value = '';
+            document.getElementById('modal-image').value = '';
             currentTask = null;
         }
 
+        // Gửi dữ liệu Hoàn thành (Optimistic UI)
         async function confirmComplete() {
             const result = document.getElementById('modal-result').value;
             const fileInput = document.getElementById('modal-image');
             
-            // Optimistic UI: Cập nhật ngay trên màn hình
-            Toast.fire({ icon: 'success', title: 'Đang xử lý ngầm...' });
+            if (!result) return Swal.fire('Opps', 'Anh hãy nhập kết quả thực hiện nhé!', 'warning');
+
+            // Hiệu ứng Optimistic: Đóng modal và báo thành công ngay
+            Toast.fire({ icon: 'success', title: 'Hệ thống đang ghi nhận...' });
             closeModal();
 
             let base64 = null;
@@ -164,39 +237,49 @@
 
             const payload = { ...currentTask, result, image: base64, contentType };
 
-            // Gửi dữ liệu lên Server
-            fetch(`${API_URL}?action=completeTask`, {
-                method: 'POST',
-                body: JSON.stringify(payload)
-            }).then(() => fetchData());
+            // Gửi ngầm lên GAS
+            const res = await callGAS('completeTask', payload);
+            fetchData(); // Cập nhật lại dữ liệu thật
         }
 
+        // Tạo mục tiêu mới
         async function submitGoal() {
             const user = document.getElementById('form-user').value;
             const goal = document.getElementById('form-goal').value;
-            const tasks = document.getElementById('form-tasks').value.split('\n').filter(t => t.trim() !== '');
+            const tasksStr = document.getElementById('form-tasks').value;
+            const tasks = tasksStr.split('\n').map(t => t.trim()).filter(t => t !== '');
 
-            if (!user || !goal || tasks.length === 0) return alert('Vui lòng điền đủ thông tin');
+            if (!user || !goal || tasks.length === 0) {
+                return Swal.fire('Thiếu thông tin', 'Anh Duke vui lòng điền đầy đủ các ô nhé!', 'error');
+            }
 
-            Toast.fire({ icon: 'info', title: 'Đang tạo mục tiêu...' });
+            Swal.fire({ title: 'Đang khởi tạo...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
-            await fetch(`${API_URL}?action=addGoal`, {
-                method: 'POST',
-                body: JSON.stringify({ user, goal, tasks })
-            });
-
-            switchTab('dashboard');
-            fetchData();
+            const res = await callGAS('addGoal', { user, goal, tasks });
+            
+            if (res.status === 'success') {
+                Swal.close();
+                document.getElementById('form-user').value = '';
+                document.getElementById('form-goal').value = '';
+                document.getElementById('form-tasks').value = '';
+                switchTab('dashboard');
+            } else {
+                Swal.fire('Lỗi', 'Không thể lưu dữ liệu: ' + res.message, 'error');
+            }
         }
 
+        // Chuyển đổi Tab UI
         function switchTab(tab) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
             document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('bg-blue-600', 'text-white'));
-            event.target.classList.add('bg-blue-600', 'text-white');
+            
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active', 'text-gray-400'));
+            document.getElementById(`btn-${tab}`).classList.add('tab-active');
+            
             if (tab === 'dashboard') fetchData();
         }
 
+        // Helper: Chuyển ảnh sang Base64 để gửi qua JSON
         const toBase64 = file => new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -204,8 +287,8 @@
             reader.onerror = error => reject(error);
         });
 
-        // Khởi tạo
-        fetchData();
+        // Tự động tải dữ liệu khi vừa mở trang
+        window.onload = fetchData;
     </script>
 </body>
 </html>
